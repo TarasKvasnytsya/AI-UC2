@@ -1,0 +1,103 @@
+User
+Create .net web api endpoint After calling an endpoint above make a request to the public `Stripe` API using the endpoint from this document https://stripe.com/docs/testing to list balance 
+ Wrap Stripe API calls in try-catch blocks to handle Stripe API errors
+ 	Parse retrieved API response data in JSON to variable/object.
+ChatGPT
+Here is a sample code for a .NET Web API endpoint that makes a call to the Stripe API, wrapped in a try-catch block for error handling, and parses the received JSON response into an object:
+
+First, install the Stripe .NET SDK using the package manager console:
+
+bash
+Copy code
+Install-Package Stripe.net
+Then, you can use the following code:
+
+csharp
+Copy code
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Net;
+using System.Net.Http;
+using System.Web.Http;
+using Stripe;
+
+namespace StripeAPI.Controllers
+{
+    public class StripeController : ApiController
+    {
+        [HttpGet]
+        [Route("api/Stripe/GetBalance")]
+        public IHttpActionResult GetBalance()
+        {
+            StripeConfiguration.ApiKey = "sk_test_4eC39HqLyjWDarjtT1zdp7dc"; // your Stripe secret key
+
+            try
+            {
+                var service = new BalanceService();
+                Balance balance = service.Get();
+
+                return Ok(balance);
+            }
+            catch (StripeException e)
+            {
+                switch (e.StripeError.ErrorType)
+                {
+                    case "card_error":
+                        Console.WriteLine("Code: " + e.StripeError.Code);
+                        Console.WriteLine("Message: " + e.Message);
+                        break;
+
+                    case "api_connection_error":
+                        Console.WriteLine("Code: " + e.StripeError.Code);
+                        Console.WriteLine("Message: " + e.Message);
+                        break;
+
+                    case "api_error":
+                        Console.WriteLine("Code: " + e.StripeError.Code);
+                        Console.WriteLine("Message: " + e.Message);
+                        break;
+
+                    case "authentication_error":
+                        Console.WriteLine("Code: " + e.StripeError.Code);
+                        Console.WriteLine("Message: " + e.Message);
+                        break;
+
+                    case "invalid_request_error":
+                        Console.WriteLine("Code: " + e.StripeError.Code);
+                        Console.WriteLine("Message: " + e.Message);
+                        break;
+
+                    case "rate_limit_error":
+                        Console.WriteLine("Code: " + e.StripeError.Code);
+                        Console.WriteLine("Message: " + e.Message);
+                        break;
+
+                    case "validation_error":
+                        Console.WriteLine("Code: " + e.StripeError.Code);
+                        Console.WriteLine("Message: " + e.Message);
+                        break;
+
+                    default:
+                        // Unknown Error Type
+                        Console.WriteLine("Code: " + e.StripeError.Code);
+                        Console.WriteLine("Message: " + e.Message);
+                        break;
+                }
+
+                return BadRequest(e.Message);
+            }
+            catch (Exception e)
+            {
+                return InternalServerError(e);
+            }
+        }
+    }
+}
+This is a simple GET endpoint that will return the balance from the Stripe API. If any error occurs during the call to the Stripe API, it will be caught by the try-catch block and logged.
+
+Please replace "sk_test_4eC39HqLyjWDarjtT1zdp7dc" with your actual secret key.
+
+The endpoint can be reached by making a GET request to /api/Stripe/GetBalance of the API's base URL.
+
+Remember to reference the Stripe.Net package in your project by adding using Stripe; at the top of your file.
