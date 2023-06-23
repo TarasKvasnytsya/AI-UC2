@@ -1,3 +1,85 @@
+User
+using Microsoft.AspNetCore.Mvc;
+using Stripe;
+
+namespace MyWebApiProject.Controllers
+{
+	[Route("api/[controller]")]
+	[ApiController]
+	public class BalanceTransactionsController : ControllerBase
+	{
+		[HttpGet]
+		public async Task<IActionResult> GetBalanceTransactions([FromQuery] int page = 1, [FromQuery] int pageSize = 10)
+		{
+			try
+			{
+				var service = new BalanceTransactionService();
+
+				var options = new BalanceTransactionListOptions()
+				{
+					Limit = pageSize,
+					StartingAfter = (page > 1) ? ((page - 1) * pageSize).ToString() : null
+				};
+
+				var balanceTransactions = await service.ListAsync(options);
+
+				return Ok(balanceTransactions);
+			}
+			catch (StripeException ex)
+			{
+				return BadRequest(new { message = ex.Message });
+			}
+			catch (Exception ex)
+			{
+				// Log the exception...
+				return StatusCode(500, new { message = $"An error occurred while retrieving balance transactions. {ex.Message}" });
+			}
+		}
+	}
+}
+
+using Microsoft.AspNetCore.Mvc;
+using Stripe;
+
+namespace MyWebApiProject.Controllers
+{
+	[ApiController]
+	[Route("[controller]")]
+	public class StripeController : ControllerBase
+	{
+		[HttpGet]
+		[Route("api/Stripe/GetBalance")]
+		public IActionResult GetBalance()
+		{
+			//for unit test
+			StripeConfiguration.ApiKey = "sk_test_4eC39HqLyjWDarjtT1zdp7dc"; // your Stripe secret key
+			try
+			{
+				var service = new BalanceService();
+				Balance balance = service.Get();
+
+				return Ok(balance);
+			}
+			catch (StripeException e)
+			{
+				Console.WriteLine("Code: " + e.StripeError.Code);
+				Console.WriteLine("Message: " + e.Message);
+
+				return BadRequest(e.Message);
+			}			
+		}
+	}
+}
+
+endpoints of the application provided upper
+please prepare Readme.md  with 
+Application description: 2 paragraphs, 4-10 Sentences.
+Information on how to run developed application locally.
+At least 2 example URLs how to use developed endpoint.
+endpoints provided upper
+
+ChatGPT
+Readme.md
 Application Description
 This is a .NET Core Web API application that is designed to interact with Stripe's API for transaction and balance inquiries. The application contains two controllers: the BalanceTransactionsController and the StripeController. The BalanceTransactionsController is responsible for retrieving a list of balance transactions using Stripe's API. It provides options to paginate results by specifying the page and the page size, thus enabling you to view specific subsets of the list based on the supplied query parameters.
 
