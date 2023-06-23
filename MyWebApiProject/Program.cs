@@ -1,4 +1,9 @@
+using Stripe;
+
 var builder = WebApplication.CreateBuilder(args);
+
+// Configure Stripe
+StripeConfiguration.ApiKey = builder.Configuration.GetSection("Stripe")["SecretKey"];
 
 // Add services to the container.
 
