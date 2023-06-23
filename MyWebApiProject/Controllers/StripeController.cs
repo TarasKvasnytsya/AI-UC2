@@ -20,49 +20,8 @@ namespace MyWebApiProject.Controllers
 			}
 			catch (StripeException e)
 			{
-				switch (e.StripeError.Type)
-				{
-					case "card_error":
-						Console.WriteLine("Code: " + e.StripeError.Code);
-						Console.WriteLine("Message: " + e.Message);
-						break;
-
-					case "api_connection_error":
-						Console.WriteLine("Code: " + e.StripeError.Code);
-						Console.WriteLine("Message: " + e.Message);
-						break;
-
-					case "api_error":
-						Console.WriteLine("Code: " + e.StripeError.Code);
-						Console.WriteLine("Message: " + e.Message);
-						break;
-
-					case "authentication_error":
-						Console.WriteLine("Code: " + e.StripeError.Code);
-						Console.WriteLine("Message: " + e.Message);
-						break;
-
-					case "invalid_request_error":
-						Console.WriteLine("Code: " + e.StripeError.Code);
-						Console.WriteLine("Message: " + e.Message);
-						break;
-
-					case "rate_limit_error":
-						Console.WriteLine("Code: " + e.StripeError.Code);
-						Console.WriteLine("Message: " + e.Message);
-						break;
-
-					case "validation_error":
-						Console.WriteLine("Code: " + e.StripeError.Code);
-						Console.WriteLine("Message: " + e.Message);
-						break;
-
-					default:
-						// Unknown Error Type
-						Console.WriteLine("Code: " + e.StripeError.Code);
-						Console.WriteLine("Message: " + e.Message);
-						break;
-				}
+				Console.WriteLine("Code: " + e.StripeError.Code);
+				Console.WriteLine("Message: " + e.Message);
 
 				return BadRequest(e.Message);
 			}			
