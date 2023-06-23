@@ -10,7 +10,9 @@ namespace MyWebApiProject.Controllers
 		[HttpGet]
 		[Route("api/Stripe/GetBalance")]
 		public IActionResult GetBalance()
-		{			
+		{
+			//for unit test
+			StripeConfiguration.ApiKey = "sk_test_4eC39HqLyjWDarjtT1zdp7dc"; // your Stripe secret key
 			try
 			{
 				var service = new BalanceService();
